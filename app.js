@@ -59,36 +59,16 @@ async function init() {
 }
 
 async function loadFiles() {
-  showToast('正在从远程加载最新版本...', 'success');
+  showToast('正在加载文件...', 'success');
   
   for (const [key, file] of Object.entries(CONFIG.FILES)) {
     try {
-      const remoteUrl = `${CONFIG.SUPABASE_URL}/storage/v1/object/public/${CONFIG.BUCKET}/${file.path}?t=${Date.now()}`;
-      let content = null;
-      let loadedFrom = 'remote';
-      
-      try {
-        const response = await fetch(remoteUrl);
-        if (response.ok) {
-          content = await response.text();
-          state.loadedFromRemote = true;
-          console.log(`✅ ${file.name} 已从远程加载`);
-        }
-      } catch (remoteError) {
-        console.warn(`远程加载 ${file.name} 失败，尝试本地文件...`);
-      }
-      
-      if (content === null) {
-        const response = await fetch(file.localPath);
-        if (response.ok) {
-          content = await response.text();
-          loadedFrom = 'local';
-          console.log(`📁 ${file.name} 已从本地加载`);
-        }
-      }
-      
-      if (content !== null) {
+      // 只从本地加载
+      const response = await fetch(file.localPath);
+      if (response.ok) {
+        const content = await response.text();
         state.content[key] = content;
+        console.log(`✅ ${file.name} 已加载`);
         
         // 提取版本信息
         const versionMatch = content.match(/版本[：:]\s*(v[\d.]+)/);
@@ -108,18 +88,17 @@ async function loadFiles() {
           CONFIG.FILES[key].changelog = changelogMatch[1].trim();
         }
         
-        CONFIG.FILES[key].loadedFrom = loadedFrom;
+        CONFIG.FILES[key].loadedFrom = 'local';
       }
     } catch (error) {
       console.error(`加载文件 ${key} 失败:`, error);
     }
   }
   
-  if (state.loadedFromRemote) {
-    showToast('已加载远程最新版本', 'success');
-  } else {
-    showToast('已加载本地版本（远程不可用）', 'success');
-  }
+  // 加载完成后立即注入样式
+  injectStyles();
+  
+  showToast('文件加载完成', 'success');
 }
 
 // =======================================================
