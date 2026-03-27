@@ -1,0 +1,19 @@
+{
+  "name": "design-tokens-manager",
+  "version": "1.0.0",
+  "description": "设计规范维护系统 - 用于管理 tokens.css 和 markdown.css",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "upload": "node scripts/upload-css-to-supabase.mjs"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.39.0",
+    "monaco-editor": "^0.45.0"
+  },
+  "devDependencies": {
+    "vite": "^5.0.0"
+  }
+}

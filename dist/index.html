@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>办公设计规范</title>
+  <script type="module" crossorigin src="/assets/index-CxNiTXTk.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-BSGJZjpH.css">
+</head>
+<body>
+  <div id="app">
+    <!-- 顶部导航 -->
+    <header class="header">
+      <div class="header-content">
+        <div class="logo">
+          <span class="logo-icon">📋</span>
+          <span class="logo-text">设计规范</span>
+        </div>
+        <div class="header-actions">
+          <button id="syncBtn" class="btn btn-secondary" title="从远程同步最新版本">
+            同步
+          </button>
+          <button id="themeToggle" class="btn btn-icon" title="切换主题">
+            <span class="icon-sun">☀️</span>
+            <span class="icon-moon">🌙</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- 主内容区 -->
+    <main class="main">
+      <!-- 左侧导航 -->
+      <nav class="sidebar">
+        <div class="sidebar-section">
+          <h3 class="sidebar-title">文件</h3>
+          <ul class="file-list">
+            <li class="file-item active" data-file="tokens">
+              <span class="file-icon">🎨</span>
+              <span class="file-name">tokens.css</span>
+              <span class="file-version">v1.0.0</span>
+            </li>
+            <li class="file-item" data-file="markdown">
+              <span class="file-icon">📝</span>
+              <span class="file-name">markdown.css</span>
+              <span class="file-version">v1.1.0</span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <h3 class="sidebar-title">案例</h3>
+          <ul class="link-list">
+            <li>
+              <a href="https://984b028d-sl-catpaw-deploy.ee.test.sankuai.com/notebook/preset-3" target="_blank" class="example-link">
+                <span class="example-icon">📝</span>
+                <span class="example-text">学城笔记</span>
+              </a>
+            </li>
+            <li>
+              <a href="https://08ea39e5-sl-catpaw-deploy.ee.test.sankuai.com/" target="_blank" class="example-link">
+                <span class="example-icon">📚</span>
+                <span class="example-text">学城 3.0</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+
+      <!-- 中间详情区 -->
+      <div class="editor-panel">
+        <div class="editor-header">
+          <div class="editor-tabs">
+            <button class="tab active" data-tab="editor">详情</button>
+            <button class="tab" data-tab="preview">预览</button>
+          </div>
+          <div class="editor-info">
+            <span id="currentFile">tokens.css</span>
+            <span class="separator">|</span>
+            <span id="currentVersion">v1.0.0</span>
+            <span class="separator">|</span>
+            <span id="loadSource" class="load-source">🌐 远程</span>
+            <span class="separator">|</span>
+            <span id="lastModified">更新于 2025-03-26</span>
+          </div>
+        </div>
+        
+        <div class="editor-content">
+          <div id="editorContainer" class="monaco-container"></div>
+          <div id="previewContainer" class="preview-container hidden">
+            <div class="markdown-body" id="markdownPreview">
+              <!-- 预览内容将通过 JS 动态生成 -->
+            </div>
+          </div>
+        </div>
+
+        <div class="editor-footer">
+          <div class="editor-status">
+            <span id="lineCount">行数: 0</span>
+            <span class="separator">|</span>
+            <span id="charCount">字符: 0</span>
+          </div>
+          <div class="editor-actions">
+            <button id="saveLocalBtn" class="btn btn-secondary">保存本地</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 右侧信息面板 -->
+      <aside class="info-panel">
+        <div class="panel-section">
+          <h3 class="panel-title">版本信息</h3>
+          <div class="version-info readonly">
+            <div class="version-item">
+              <label>当前版本</label>
+              <div class="readonly-value" id="versionDisplay">v1.0.0</div>
+            </div>
+            <div class="version-item">
+              <label>更新日期</label>
+              <div class="readonly-value" id="dateDisplay">2025-03-26</div>
+            </div>
+            <div class="version-item">
+              <label>更新内容</label>
+              <div class="readonly-value changelog" id="changelogDisplay">初始版本，定义基础设计 Token 规范</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel-section">
+          <h3 class="panel-title">使用方式</h3>
+          <p class="usage-desc">在项目开始阶段，将以下代码提供给 AI 助手（如 Cursor、CatPaw），AI 即可自动接入并使用最新的设计规范。</p>
+          <div class="usage-tabs">
+            <button class="usage-tab active" data-usage="js">动态加载</button>
+            <button class="usage-tab" data-usage="html">HTML 引用</button>
+            <button class="usage-tab" data-usage="prompt">系统提示词</button>
+          </div>
+          <div class="usage-content">
+            <pre id="usageCode"></pre>
+            <button class="btn btn-small copy-btn" data-target="usageCode">复制</button>
+          </div>
+        </div>
+      </aside>
+    </main>
+
+    <!-- Toast 提示 -->
+    <div id="toast" class="toast hidden">
+      <span class="toast-icon"></span>
+      <span class="toast-message"></span>
+    </div>
+  </div>
+
+</body>
+</html>

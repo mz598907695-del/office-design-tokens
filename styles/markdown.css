@@ -1,0 +1,404 @@
+/* =======================================================
+   📋 AI 输出格式规范（供大模型参考）
+   
+   版本：v1.1.0
+   更新日期：2025-03-26
+   更新内容：优化表格和列表渲染规则
+=======================================================
+
+  一、身份与目标
+  ─────────────────────────────────────────────────────
+  你是一个专业的技术文档撰写助手，输出的内容将在「学城笔记」
+  的 AI 对话界面中渲染。你的目标是：
+  1. 输出结构清晰、层次分明的 Markdown 内容
+  2. 确保表格、列表、标题等元素正确渲染
+  3. 遵循以下格式规范，避免渲染错误
+
+
+  二、标题层级规则（必须遵守）
+  ─────────────────────────────────────────────────────
+  
+  ✅ 允许使用的标题级别：
+  - ## 主标题（必须有 1 个 emoji）
+  - #### 小节标题（emoji 可选）
+
+  ❌ 禁止使用的标题级别：
+  - ### 三级标题（禁止）
+  - ##### 五级标题（禁止）
+  - ###### 六级标题（禁止）
+
+  ❗ 标题格式要求：
+  - `#` 后必须有空格
+  - ✅ 正确：## 📋 项目背景
+  - ✅ 正确：#### ⚙️ 配置说明
+  - ❌ 错误：##📋项目背景（无空格）
+  - ❌ 错误：####⚙️配置说明（无空格）
+
+  📌 Emoji 使用规则：
+  - ## 主标题：必须有 1 个 emoji
+  - #### 小节标题：emoji 可选
+  - emoji 与文字之间要有空格
+
+
+  三、表格规则（必须遵守）
+  ─────────────────────────────────────────────────────
+  
+  ✅ 表格格式要求：
+  1. 列数必须一致（表头和每行的列数相同）
+  2. 表头下方必须有分隔行 `|---|---|`
+  3. 禁止在表格内嵌套标题
+  4. 表格前后必须有空行
+
+  ❌ 表格后禁止直接跟分割线：
+  - 表格结束后不要立即添加 `---`
+  - 如需分割，先用普通文字过渡
+
+  ✅ 正确示例：
+  | 列1 | 列2 | 列3 |
+  |-----|-----|-----|
+  | A   | B   | C   |
+  | D   | E   | F   |
+
+  这里可以添加说明文字。
+
+  ❌ 错误示例：
+  | 列1 | 列2 |
+  |-----|-----|
+  | A   | B   | C   |  ← 列数不一致
+  
+  | 列1 | 列2 |
+  |-----|-----|
+  | A   | B   |
+  ---                         ← 表格后直接跟分割线（禁止）
+
+
+  四、有序列表规则（必须遵守）
+  ─────────────────────────────────────────────────────
+  
+  ✅ 序号必须递增：
+  1. 第一步
+  2. 第二步
+  3. 第三步
+
+  ❌ 禁止重复序号：
+  1. 第一步
+  1. 第二步  ← 错误：应该是 2.
+  1. 第三步  ← 错误：应该是 3.
+
+
+  五、分割线规则
+  ─────────────────────────────────────────────────────
+  
+  - 使用三个或更多 `---` 创建分割线
+  - 分割线前后必须有空行
+  - 表格后禁止直接跟分割线
+
+
+  六、代码块规则
+  ─────────────────────────────────────────────────────
+  
+  - 使用三个反引号创建代码块
+  - 必须指定语言标识
+  - ✅ 正确：```javascript
+  - ❌ 错误：```（无语言标识）
+
+
+  七、完整示例
+  ─────────────────────────────────────────────────────
+
+## 📋 项目背景
+
+这是项目背景描述。
+
+#### ⚙️ 技术方案
+
+技术方案的详细说明。
+
+| 组件 | 用途 | 状态 |
+|------|------|------|
+| CSS | 样式 | 完成 |
+| JS | 交互 | 进行中 |
+
+如上表所示，项目进度良好。
+
+1. 第一步：初始化项目
+2. 第二步：安装依赖
+3. 第三步：启动开发服务器
+
+---
+
+更多信息请参考文档。
+
+=======================================================
+   Markdown 渲染样式
+======================================================= */
+
+/* =======================================================
+   基础容器样式
+======================================================= */
+.markdown-body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  font-size: var(--font-size-16, 1rem);
+  line-height: var(--line-height-normal, 1.5);
+  color: var(--color-text-2, rgba(17, 25, 37, 1));
+  background-color: var(--color-bg-1, rgba(255, 255, 255, 1));
+  word-wrap: break-word;
+}
+
+/* =======================================================
+   标题样式
+   只支持 ## 和 #### 两个层级
+======================================================= */
+.markdown-body h2 {
+  font-size: var(--font-size-24, 1.5rem);
+  font-weight: 600;
+  line-height: var(--line-height-tight, 1.25);
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--color-border-2, rgba(231, 232, 233, 1));
+  color: var(--color-text-1, rgba(0, 0, 0, 1));
+}
+
+.markdown-body h4 {
+  font-size: var(--font-size-18, 1.125rem);
+  font-weight: 600;
+  line-height: var(--line-height-tight, 1.25);
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+  color: var(--color-text-2, rgba(17, 25, 37, 1));
+}
+
+/* =======================================================
+   段落和文本
+======================================================= */
+.markdown-body p {
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+
+.markdown-body strong {
+  font-weight: 600;
+  color: var(--color-text-1, rgba(0, 0, 0, 1));
+}
+
+.markdown-body em {
+  font-style: italic;
+}
+
+.markdown-body a {
+  color: var(--color-blue, rgba(0, 140, 255, 1));
+  text-decoration: none;
+  transition: color var(--transition-fast, 150ms ease);
+}
+
+.markdown-body a:hover {
+  color: var(--color-blue-hover, rgba(38, 157, 255, 1));
+  text-decoration: underline;
+}
+
+/* =======================================================
+   列表样式
+======================================================= */
+.markdown-body ul,
+.markdown-body ol {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  padding-left: 1.5rem;
+}
+
+.markdown-body li {
+  margin-bottom: 0.25rem;
+}
+
+.markdown-body li::marker {
+  color: var(--color-text-4, rgba(17, 25, 37, 0.65));
+}
+
+/* 有序列表序号样式 */
+.markdown-body ol {
+  list-style: decimal;
+  counter-reset: list-counter;
+}
+
+.markdown-body ol > li {
+  counter-increment: list-counter;
+  list-style: decimal;
+}
+
+/* =======================================================
+   表格样式
+======================================================= */
+.markdown-body table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
+  font-size: var(--font-size-14, 0.875rem);
+  overflow-x: auto;
+  display: block;
+}
+
+.markdown-body thead {
+  background-color: var(--color-fill-2, rgba(248, 248, 248, 1));
+}
+
+.markdown-body th {
+  padding: 0.75rem 1rem;
+  font-weight: 600;
+  text-align: left;
+  border-bottom: 2px solid var(--color-border-1, rgba(219, 221, 222, 1));
+  color: var(--color-text-1, rgba(0, 0, 0, 1));
+  white-space: nowrap;
+}
+
+.markdown-body td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--color-border-2, rgba(231, 232, 233, 1));
+  vertical-align: top;
+}
+
+.markdown-body tbody tr:hover {
+  background-color: var(--color-fill-a2, rgba(17, 25, 37, 0.03));
+}
+
+.markdown-body tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* =======================================================
+   代码样式
+======================================================= */
+.markdown-body code {
+  font-family: 'SF Mono', 'Menlo', 'Monaco', 'Consolas', 'Liberation Mono', 'Courier New', monospace;
+  font-size: 0.875em;
+  padding: 0.125rem 0.375rem;
+  background-color: var(--color-fill-3, rgba(243, 243, 244, 1));
+  border-radius: var(--radius-4, 0.25rem);
+  color: var(--color-red-text, rgba(166, 38, 42, 1));
+}
+
+.markdown-body pre {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  background-color: var(--color-bg-2, rgba(245, 246, 247, 1));
+  border-radius: var(--radius-8, 0.5rem);
+  overflow-x: auto;
+  font-size: var(--font-size-14, 0.875rem);
+  line-height: 1.6;
+}
+
+.markdown-body pre code {
+  padding: 0;
+  background-color: transparent;
+  color: var(--color-text-2, rgba(17, 25, 37, 1));
+  font-size: inherit;
+}
+
+/* =======================================================
+   分割线样式
+======================================================= */
+.markdown-body hr {
+  border: none;
+  height: 1px;
+  background-color: var(--color-border-2, rgba(231, 232, 233, 1));
+  margin: 1.5rem 0;
+}
+
+/* =======================================================
+   引用块样式
+======================================================= */
+.markdown-body blockquote {
+  margin: 0 0 1rem;
+  padding: 0.5rem 1rem;
+  border-left: 4px solid var(--color-blue, rgba(0, 140, 255, 1));
+  background-color: var(--color-blue-bg-weak, rgba(224, 241, 255, 1));
+  color: var(--color-text-3, rgba(17, 25, 37, 0.85));
+}
+
+.markdown-body blockquote p:last-child {
+  margin-bottom: 0;
+}
+
+/* =======================================================
+   图片样式
+======================================================= */
+.markdown-body img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius-8, 0.5rem);
+  margin: 1rem 0;
+}
+
+/* =======================================================
+   Dark 模式适配
+======================================================= */
+[data-theme="dark"] .markdown-body {
+  color: var(--color-text-2, rgba(255, 255, 255, 0.9));
+  background-color: var(--color-bg-1, rgba(25, 27, 28, 1));
+}
+
+[data-theme="dark"] .markdown-body h2 {
+  color: var(--color-text-1, rgba(255, 255, 255, 1));
+  border-bottom-color: var(--color-border-1, rgb(64, 66, 67));
+}
+
+[data-theme="dark"] .markdown-body h4 {
+  color: var(--color-text-2, rgba(255, 255, 255, 0.9));
+}
+
+[data-theme="dark"] .markdown-body strong {
+  color: var(--color-text-1, rgba(255, 255, 255, 1));
+}
+
+[data-theme="dark"] .markdown-body a {
+  color: var(--color-blue-text, rgba(166, 218, 255, 1));
+}
+
+[data-theme="dark"] .markdown-body a:hover {
+  color: var(--color-blue-hover, rgba(0, 127, 217, 1));
+}
+
+[data-theme="dark"] .markdown-body li::marker {
+  color: var(--color-text-4, rgba(255, 255, 255, 0.6));
+}
+
+[data-theme="dark"] .markdown-body thead {
+  background-color: var(--color-fill-2, rgba(42, 44, 46, 1));
+}
+
+[data-theme="dark"] .markdown-body th {
+  border-bottom-color: var(--color-border-1, rgb(64, 66, 67));
+}
+
+[data-theme="dark"] .markdown-body td {
+  border-bottom-color: var(--color-border-2, rgba(53, 54, 55, 1));
+}
+
+[data-theme="dark"] .markdown-body tbody tr:hover {
+  background-color: var(--color-fill-a2, rgba(255, 255, 255, 0.05));
+}
+
+[data-theme="dark"] .markdown-body code {
+  background-color: var(--color-fill-3, rgba(52, 54, 56, 1));
+  color: var(--color-red-text, rgba(255, 190, 192, 1));
+}
+
+[data-theme="dark"] .markdown-body pre {
+  background-color: var(--color-bg-2, rgba(18, 19, 20, 1));
+}
+
+[data-theme="dark"] .markdown-body pre code {
+  color: var(--color-text-2, rgba(255, 255, 255, 0.9));
+}
+
+[data-theme="dark"] .markdown-body hr {
+  background-color: var(--color-border-2, rgba(53, 54, 55, 1));
+}
+
+[data-theme="dark"] .markdown-body blockquote {
+  border-left-color: var(--color-blue, rgba(0, 149, 255, 1));
+  background-color: var(--color-blue-bg-weak, rgba(0, 60, 102, 1));
+  color: var(--color-text-3, rgba(255, 255, 255, 0.75));
+}
