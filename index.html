@@ -137,11 +137,12 @@
 
         <div class="panel-section">
           <h3 class="panel-title">使用方式</h3>
-          <p class="usage-desc">在项目开始阶段，将以下代码提供给 AI 助手（如 Cursor、CatPaw），AI 即可自动接入并使用最新的设计规范。</p>
+          <p class="usage-desc">通过 NPM 安装，即可在项目中使用设计规范。支持动态加载、CSS 导入和 AI 提示词获取。</p>
           <div class="usage-tabs">
-            <button class="usage-tab active" data-usage="js">动态加载</button>
-            <button class="usage-tab" data-usage="html">HTML 引用</button>
-            <button class="usage-tab" data-usage="prompt">系统提示词</button>
+            <button class="usage-tab active" data-usage="install">NPM 安装</button>
+            <button class="usage-tab" data-usage="import">导入使用</button>
+            <button class="usage-tab" data-usage="prompt">AI 提示词</button>
+            <button class="usage-tab" data-usage="update">更新方式</button>
           </div>
           <div class="usage-content">
             <pre id="usageCode"></pre>

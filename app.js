@@ -331,22 +331,42 @@ function updateStats() {
 }
 
 function updateUsageCode() {
-  const file = CONFIG.FILES[state.currentFile];
-  const url = `${CONFIG.SUPABASE_URL}/storage/v1/object/public/${CONFIG.BUCKET}/${file.path}`;
-  
   const usageCodes = {
-    js: `import { loadStylesFromSupabase } from './utils/loadStyles';
+    install: `# 安装设计规范包
+npm install github:mz598907695-del/office-design-tokens#main
 
-await loadStylesFromSupabase();`,
-    html: `<link rel="stylesheet" href="${url}" />`,
-    prompt: `import { loadMarkdownGuideFromSupabase } from './utils/loadStyles';
+# 或指定版本
+npm install github:mz598907695-del/office-design-tokens#v1.1.1`,
+    import: `// 方式 1：动态加载所有样式
+import { loadAll } from 'office-design-tokens';
+loadAll();
 
-const guide = await loadMarkdownGuideFromSupabase();
-// 返回 markdown.css 中提取的 AI 规范文本`
+// 方式 2：导入 CSS 文件
+import 'office-design-tokens/dist/tokens.css';
+import 'office-design-tokens/dist/markdown.css';
+
+// 方式 3：获取 CSS 内容自定义处理
+import { getTokensCSS, getMarkdownCSS } from 'office-design-tokens';
+const tokensCss = getTokensCSS();`,
+    prompt: `// 获取 AI 格式提示词
+import { getPrompt } from 'office-design-tokens';
+
+const prompt = getPrompt();
+// 将 prompt 作为系统提示词提供给 AI
+// AI 将严格按照 markdown.css 和 tokens.css 规范输出内容`,
+    update: `# 更新到最新版本
+npm update office-design-tokens
+
+# 或删除后重新安装
+rm -rf node_modules/office-design-tokens
+npm install github:mz598907695-del/office-design-tokens#main
+
+# 指定版本安装
+npm install github:mz598907695-del/office-design-tokens#v1.1.1`
   };
   
   const activeTab = document.querySelector('.usage-tab.active');
-  const usage = activeTab ? activeTab.dataset.usage : 'js';
+  const usage = activeTab ? activeTab.dataset.usage : 'install';
   document.getElementById('usageCode').textContent = usageCodes[usage];
 }
 
