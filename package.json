@@ -1,19 +1,41 @@
 {
-  "name": "design-tokens-manager",
-  "version": "1.0.0",
-  "description": "设计规范维护系统 - 用于管理 tokens.css 和 markdown.css",
-  "type": "module",
+  "name": "office-design-tokens",
+  "version": "1.1.0",
+  "description": "办公设计规范 - 包含 tokens、markdown 样式和 AI 格式提示词",
+  "main": "dist/index.js",
+  "module": "dist/index.esm.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist/",
+    "styles/",
+    "scripts/",
+    "package.json"
+  ],
+  "exports": {
+    ".": {
+      "import": "./dist/index.esm.js",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./tokens.css": "./dist/tokens.css",
+    "./markdown.css": "./dist/markdown.css",
+    "./prompt": "./dist/ai-format-prompt.md",
+    "./package.json": "./package.json"
+  },
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview",
-    "upload": "node scripts/upload-css-to-supabase.mjs"
+    "build": "mkdir -p dist && cp styles/tokens.css dist/ && cp styles/markdown.css dist/ && cp styles/ai-format-prompt.md dist/ && node scripts/build-entry.js",
+    "prepare": "npm run build"
   },
-  "dependencies": {
-    "@supabase/supabase-js": "^2.39.0",
-    "monaco-editor": "^0.45.0"
-  },
-  "devDependencies": {
-    "vite": "^5.0.0"
+  "keywords": [
+    "design-tokens",
+    "css",
+    "markdown",
+    "ai-prompt"
+  ],
+  "author": "办公设计团队",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yourname/office-design-tokens.git"
   }
 }

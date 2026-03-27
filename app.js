@@ -9,29 +9,38 @@ const CONFIG = {
   SUPABASE_URL: 'https://db0cwzml9gxiye.database.sankuai.com',
   BUCKET: 'public-assets',
   FILES: {
+    markdown: {
+      path: 'styles/markdown.css',
+      localPath: './styles/markdown.css',
+      name: 'markdown',
+      icon: 'iconfont icon-danao',
+      version: 'v1.1.0',
+      date: '2025-03-26',
+      changelog: '优化表格和列表渲染规则'
+    },
     tokens: {
       path: 'styles/tokens.css',
       localPath: './styles/tokens.css',
-      name: 'tokens.css',
-      icon: '🎨',
+      name: 'tokens',
+      icon: 'iconfont icon-fengche',
       version: 'v1.0.0',
       date: '2025-03-26',
       changelog: '初始版本，定义基础设计 Token 规范'
     },
-    markdown: {
-      path: 'styles/markdown.css',
-      localPath: './styles/markdown.css',
-      name: 'markdown.css',
-      icon: '📝',
+    prompt: {
+      path: 'styles/ai-format-prompt.md',
+      localPath: './styles/ai-format-prompt.md',
+      name: '模型格式',
+      icon: 'iconfont icon-zhi_changjuanzhi_wenben',
       version: 'v1.1.0',
       date: '2025-03-26',
-      changelog: '优化表格和列表渲染规则'
+      changelog: '独立出 AI 格式控制提示词'
     }
   }
 };
 
 const state = {
-  currentFile: 'tokens',
+  currentFile: 'markdown',
   content: {},
   editor: null,
   theme: localStorage.getItem('theme') || 'light',
@@ -138,7 +147,7 @@ async function initMonacoEditor() {
         document.getElementById('editorContainer'),
         {
           value: state.content[state.currentFile],
-          language: 'css',
+          language: state.currentFile === 'prompt' ? 'markdown' : 'css',
           theme: state.theme === 'dark' ? 'custom-dark' : 'custom-light',
           fontSize: 14,
           fontFamily: "'SF Mono', 'Menlo', 'Monaco', 'Consolas', monospace",
@@ -237,6 +246,25 @@ function bindEvents() {
 }
 
 // =======================================================
+// 动态注入样式
+// =======================================================
+function injectStyles() {
+  let styleEl = document.getElementById('dynamic-styles');
+  if (!styleEl) {
+    styleEl = document.createElement('style');
+    styleEl.id = 'dynamic-styles';
+    document.head.appendChild(styleEl);
+  }
+
+  const markdownCss = state.content['markdown'] || '';
+  const tokensCss = state.content['tokens'] || '';
+
+  // 确保注入的样式在最后，以覆盖默认样式
+  // 先注入 tokens 变量，再注入 markdown 样式
+  styleEl.textContent = tokensCss + '\n' + markdownCss;
+}
+
+// =======================================================
 // UI 更新
 // =======================================================
 function updateUI() {
@@ -254,10 +282,22 @@ function updateUI() {
   document.getElementById('currentVersion').textContent = file.version;
   document.getElementById('lastModified').textContent = `更新于 ${file.date}`;
   
+  // 控制预览 tab 的显示/隐藏
+  const previewTab = document.querySelector('.tab[data-tab="preview"]');
+  if (previewTab) {
+    if (state.currentFile === 'tokens' || state.currentFile === 'prompt') {
+      previewTab.style.display = 'none';
+    } else {
+      previewTab.style.display = 'block';
+    }
+  }
+  
   // 更新加载来源标识
   const loadSourceEl = document.getElementById('loadSource');
   const loadedFrom = file.loadedFrom || 'local';
-  loadSourceEl.textContent = loadedFrom === 'remote' ? '🌐 远程' : '📁 本地';
+  loadSourceEl.innerHTML = loadedFrom === 'remote' 
+    ? '<span class="iconfont icon-xitong"></span> 远程' 
+    : '<span class="iconfont icon-wenjianjia_dangan_guanbi"></span> 本地';
   loadSourceEl.className = `load-source ${loadedFrom}`;
   
   // 更新版本信息（只读）
@@ -270,6 +310,9 @@ function updateUI() {
   
   // 更新统计
   updateStats();
+  
+  // 注入最新样式以供预览
+  injectStyles();
   
   // 如果当前在预览 tab，重新渲染预览
   const activeTab = document.querySelector('.tab.active');
@@ -314,7 +357,14 @@ function switchFile(file) {
   state.currentFile = file;
   
   if (state.editor) {
+    const model = state.editor.getModel();
+    monaco.editor.setModelLanguage(model, file === 'prompt' ? 'markdown' : 'css');
     state.editor.setValue(state.content[file] || '');
+  }
+  
+  // 如果切换到 tokens 或 prompt，强制回到编辑器视图
+  if (file === 'tokens' || file === 'prompt') {
+    switchTab('editor');
   }
   
   updateUI();
@@ -348,67 +398,69 @@ function renderPreview() {
   
   if (state.currentFile === 'markdown') {
     previewContainer.innerHTML = `
-      <h2>📋 项目背景</h2>
-      <p>这是项目背景描述。我们正在构建一个全新的设计规范系统，以确保所有内部工具的视觉一致性。</p>
-      
-      <h4>⚙️ 技术方案</h4>
-      <p>技术方案的详细说明。我们采用了 CSS Variables (Custom Properties) 来实现主题切换和动态样式加载。</p>
-      
-      <table>
-        <thead>
-          <tr>
-            <th>组件</th>
-            <th>用途</th>
-            <th>状态</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>CSS Tokens</td>
-            <td>定义全局颜色、字号、间距等基础变量</td>
-            <td>✅ 完成</td>
-          </tr>
-          <tr>
-            <td>Markdown 样式</td>
-            <td>统一 AI 输出内容的渲染格式</td>
-            <td>✅ 完成</td>
-          </tr>
-          <tr>
-            <td>组件库</td>
-            <td>提供可复用的 UI 组件</td>
-            <td>🚧 进行中</td>
-          </tr>
-        </tbody>
-      </table>
-      
-      <p>如上表所示，项目进度良好。接下来我们将重点关注组件库的开发。</p>
-      
-      <ol>
-        <li>第一步：初始化项目并配置构建工具</li>
-        <li>第二步：定义基础设计 Token</li>
-        <li>第三步：实现 Markdown 渲染样式</li>
-        <li>第四步：开发核心 UI 组件</li>
-      </ol>
-      
-      <hr>
-      
-      <blockquote>
-        <p><strong>提示：</strong> 这是一个引用块示例。在实际应用中，引用块常用于强调重要信息或展示 AI 的特殊回复。</p>
-      </blockquote>
-      
-      <p>以下是一段代码示例：</p>
-      <pre><code>function greet(name) {
+      <div class="markdown-body">
+        <h2>📋 项目背景</h2>
+        <p>这是项目背景描述。我们正在构建一个全新的设计规范系统，以确保所有内部工具的视觉一致性。</p>
+        
+        <h4>⚙️ 技术方案</h4>
+        <p>技术方案的详细说明。我们采用了 CSS Variables (Custom Properties) 来实现主题切换和动态样式加载。</p>
+        
+        <table>
+          <thead>
+            <tr>
+              <th>组件</th>
+              <th>用途</th>
+              <th>状态</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>CSS Tokens</td>
+              <td>定义全局颜色、字号、间距等基础变量</td>
+              <td>✅ 完成</td>
+            </tr>
+            <tr>
+              <td>Markdown 样式</td>
+              <td>统一 AI 输出内容的渲染格式</td>
+              <td>✅ 完成</td>
+            </tr>
+            <tr>
+              <td>组件库</td>
+              <td>提供可复用的 UI 组件</td>
+              <td>🚧 进行中</td>
+            </tr>
+          </tbody>
+        </table>
+        
+        <p>如上表所示，项目进度良好。接下来我们将重点关注组件库的开发。</p>
+        
+        <ol>
+          <li>第一步：初始化项目并配置构建工具</li>
+          <li>第二步：定义基础设计 Token</li>
+          <li>第三步：实现 Markdown 渲染样式</li>
+          <li>第四步：开发核心 UI 组件</li>
+        </ol>
+        
+        <hr>
+        
+        <blockquote>
+          <p><strong>提示：</strong> 这是一个引用块示例。在实际应用中，引用块常用于强调重要信息或展示 AI 的特殊回复。</p>
+        </blockquote>
+        
+        <p>以下是一段代码示例：</p>
+        <pre><code>function greet(name) {
   console.log(\`Hello, \${name}!\`);
 }
 
 greet('World');</code></pre>
-      
-      <p>更多信息请参考<a href="#">官方文档</a>。</p>
+        
+        <p>更多信息请参考<a href="#">官方文档</a>。</p>
+      </div>
     `;
   } else {
     previewContainer.innerHTML = `
       <div style="text-align: center; padding: 40px; color: var(--color-text-4);">
-        <div style="font-size: 48px; margin-bottom: 16px;">🎨</div>
+        <div class="iconfont icon-zujian" style="font-size: 48px; margin-bottom: 16px;"></div>
         <h3>Tokens 预览</h3>
         <p style="margin-top: 8px;">Tokens 文件主要定义 CSS 变量，请在左侧切换到 markdown.css 查看实际渲染效果。</p>
       </div>
@@ -525,6 +577,10 @@ function saveLocal() {
 function showToast(message, type = 'success') {
   const toast = document.getElementById('toast');
   toast.querySelector('.toast-message').textContent = message;
+  
+  const iconEl = toast.querySelector('.toast-icon');
+  iconEl.className = 'toast-icon iconfont ' + (type === 'success' ? 'icon-gou' : 'icon-cha_x');
+  
   toast.className = `toast ${type}`;
   toast.classList.remove('hidden');
   

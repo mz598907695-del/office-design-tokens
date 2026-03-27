@@ -30,12 +30,20 @@ const files = [
   {
     localPath: path.join(__dirname, '../styles/tokens.css'),
     remotePath: 'styles/tokens.css',
-    name: 'tokens.css'
+    name: 'tokens.css',
+    contentType: 'text/css'
   },
   {
     localPath: path.join(__dirname, '../styles/markdown.css'),
     remotePath: 'styles/markdown.css',
-    name: 'markdown.css'
+    name: 'markdown.css',
+    contentType: 'text/css'
+  },
+  {
+    localPath: path.join(__dirname, '../styles/ai-format-prompt.md'),
+    remotePath: 'styles/ai-format-prompt.md',
+    name: 'ai-format-prompt.md',
+    contentType: 'text/markdown'
   }
 ];
 
@@ -68,7 +76,7 @@ async function uploadFiles() {
       const { data, error } = await supabase.storage
         .from(BUCKET)
         .upload(file.remotePath, content, {
-          contentType: 'text/css',
+          contentType: file.contentType || 'text/css',
           upsert: true
         });
       
