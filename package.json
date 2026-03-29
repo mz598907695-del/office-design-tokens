@@ -39,6 +39,7 @@
     "url": "git+https://github.com/yourname/office-design-tokens.git"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.100.1",
     "ogl": "^1.0.11"
   }
 }
