@@ -23,19 +23,24 @@
   ❌ 禁止在代码中直接写死阴影、模糊等特效值
   ❌ 禁止 AI 未经用户明确允许擅自修改此文件内容
 
-【版本历史】
-  v1.0.0 (2025-03-26) - 初始版本，定义基础设计 Token 规范
-
 【使用方式】
-  在 CSS/SCSS/LESS 中使用：
-    color: var(--color-text-1);
-    font-size: var(--font-size-14);
-    border-radius: var(--radius-8);
-    box-shadow: var(--effect-shadow-level-1-box);
+  方式一：复制到项目（推荐）
+    1. 复制本文件到项目目录（如：styles/tokens.css）
+    2. 在编码软件/AI工具中引用本地文件路径
+    3. 在 CSS 中使用：color: var(--color-text-1);
+    
+  方式二：使用安装脚本
+    node scripts/install-local.mjs <你的项目目录>
+    
+  方式三：CDN 引用（仅 Web 项目）
+    @import url('https://db0cwzml9gxiye.database.sankuai.com/storage/v1/object/public/public-assets/styles/tokens.css');
 
   在 JavaScript/TypeScript 中使用：
     const color = getComputedStyle(document.documentElement)
       .getPropertyValue('--color-blue');
+
+【版本历史】
+  v1.0.0 (2025-03-26) - 初始版本，定义基础设计 Token 规范
 
 =======================================================
    全局 CSS Token（颜色 / 字号 / 圆角 / 特效 / 间距 / 边框）
