@@ -1,0 +1,13 @@
+# 项目类型：静态资源项目（前端网站，无需启动服务）
+type: webstatic
+
+# 构建命令：使用 Vite 构建项目
+cmd:
+  - npm install
+  - npm run build
+
+# 构建产物目录：Vite 默认输出到 dist 目录
+target:
+  - dist
+
+projectID: cd9b7f5b
